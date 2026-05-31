@@ -7,7 +7,7 @@
 
 Projeto de estudo para praticar mensageria com **Amazon SQS**, **Spring Boot**, **Spring Cloud AWS** e **LocalStack**.
 
-A aplicacao expoe um endpoint HTTP para enviar mensagens para uma fila SQS local. Depois, um consumer escuta essa fila e processa a mensagem usando uma camada de service.
+A aplicação expõe um endpoint HTTP para enviar mensagens para uma fila SQS local. Depois, um consumer escuta essa fila e processa a mensagem usando uma camada de service.
 
 ---
 
@@ -16,12 +16,12 @@ A aplicacao expoe um endpoint HTTP para enviar mensagens para uma fila SQS local
 Este projeto foi criado para praticar:
 
 - Producer/Consumer Pattern com SQS
-- Configuracao local com LocalStack
+- Configuração local com LocalStack
 - `@SqsListener` com Spring Cloud AWS
 - `SqsTemplate` para envio de mensagens
 - Externalized Configuration com `application.yml`
-- Separacao de responsabilidades entre controller, producer, consumer e service
-- Principios SOLID aplicados em um exemplo pequeno
+- Separação de responsabilidades entre controller, producer, consumer e service
+- Princípios SOLID aplicados em um exemplo pequeno
 
 ---
 
@@ -30,9 +30,9 @@ Este projeto foi criado para praticar:
 | Tecnologia | Uso |
 |---|---|
 | Java 21 | Linguagem principal |
-| Spring Boot 4.0.6 | Base da aplicacao |
+| Spring Boot 4.0.6 | Base da aplicação |
 | Spring Web MVC | Endpoint REST |
-| Spring Cloud AWS 4.0.2 | Integracao com SQS |
+| Spring Cloud AWS 4.0.2 | Integração com SQS |
 | AWS SDK v2 | Client SQS usado pelo Spring Cloud AWS |
 | LocalStack | Ambiente AWS local |
 | Maven Wrapper | Build sem Maven instalado globalmente |
@@ -63,14 +63,14 @@ MyConsumer
 MessageService
         |
         v
-Log da aplicacao
+Log da aplicação
 ```
 
 ### Responsabilidades
 
 | Classe | Responsabilidade |
 |---|---|
-| `MessageController` | Recebe requisicoes HTTP |
+| `MessageController` | Recebe requisições HTTP |
 | `MessageProducer` | Define o contrato de envio de mensagem |
 | `SqsMessageProducer` | Implementa o envio usando `SqsTemplate` |
 | `MyConsumer` | Escuta mensagens da fila com `@SqsListener` |
@@ -80,11 +80,11 @@ Log da aplicacao
 
 ---
 
-## Principios E Padroes Aplicados
+## Princípios e Padrões Aplicados
 
 ### Dependency Inversion Principle
 
-O controller depende da interface `MessageProducer`, nao da implementacao concreta `SqsMessageProducer`.
+O controller depende da interface `MessageProducer`, não da implementação concreta `SqsMessageProducer`.
 
 Isso permite trocar a tecnologia de mensageria no futuro sem alterar a entrada HTTP.
 
@@ -104,13 +104,13 @@ Cada classe tem uma responsabilidade clara:
 
 ### Producer/Consumer Pattern
 
-A aplicacao envia mensagens para uma fila e tambem consome mensagens dessa fila.
+A aplicação envia mensagens para uma fila e também consome mensagens dessa fila.
 
-Esse padrao desacopla quem produz eventos de quem processa eventos.
+Esse padrão desacopla quem produz eventos de quem processa eventos.
 
 ---
 
-## Pre-requisitos
+## Pré-requisitos
 
 Antes de executar, tenha instalado:
 
@@ -118,11 +118,11 @@ Antes de executar, tenha instalado:
 - Docker
 - Postman, Insomnia ou `curl`
 
-O projeto usa Maven Wrapper, entao nao e necessario instalar Maven manualmente.
+O projeto usa Maven Wrapper, então não é necessário instalar Maven manualmente.
 
 ---
 
-## Subindo O LocalStack
+## Subindo o LocalStack
 
 Execute o LocalStack com suporte a SQS:
 
@@ -143,7 +143,7 @@ aws --endpoint-url=http://localhost:4566 \
   --region sa-east-1
 ```
 
-Se voce nao tiver AWS CLI configurado, use credenciais fake:
+Se você não tiver AWS CLI configurado, use credenciais fake:
 
 ```bash
 export AWS_ACCESS_KEY_ID=test
@@ -161,7 +161,7 @@ aws --endpoint-url=http://localhost:4566 \
 
 ---
 
-## Configuracao
+## Configuração
 
 Arquivo principal:
 
@@ -169,7 +169,7 @@ Arquivo principal:
 src/main/resources/application.yml
 ```
 
-Configuracao atual:
+Configuração atual:
 
 ```yaml
 spring:
@@ -189,11 +189,11 @@ app:
       secret-key: test
 ```
 
-As credenciais `test/test` sao usadas porque o LocalStack exige que o SDK receba credenciais, mas nao valida credenciais reais da AWS.
+As credenciais `test/test` são usadas porque o LocalStack exige que o SDK receba credenciais, mas não valida credenciais reais da AWS.
 
 ---
 
-## Executando A Aplicacao
+## Executando a Aplicação
 
 Na raiz do projeto:
 
@@ -201,7 +201,7 @@ Na raiz do projeto:
 ./mvnw spring-boot:run
 ```
 
-A aplicacao sobe por padrao em:
+A aplicação sobe por padrão em:
 
 ```text
 http://localhost:8080
@@ -209,12 +209,12 @@ http://localhost:8080
 
 Importante:
 
-- `8080` e a porta da aplicacao Spring Boot
-- `4566` e a porta do LocalStack
+- `8080` é a porta da aplicação Spring Boot
+- `4566` é a porta do LocalStack
 
 ---
 
-## Enviando Uma Mensagem
+## Enviando uma Mensagem
 
 Endpoint:
 
@@ -252,7 +252,7 @@ Processing message content: mensagem 1
 
 ---
 
-## Fluxo Da Mensagem
+## Fluxo da Mensagem
 
 1. O cliente envia `POST /messages`.
 2. `MessageController` recebe o JSON.
@@ -260,15 +260,15 @@ Processing message content: mensagem 1
 4. `SqsMessageProducer` envia a mensagem para a fila `minhafila`.
 5. `MyConsumer` escuta a fila com `@SqsListener`.
 6. `MessageService` valida e processa a mensagem.
-7. A aplicacao registra o processamento no log.
+7. A aplicação registra o processamento no log.
 
 ---
 
-## Validacao Da Mensagem
+## Validação da Mensagem
 
 O service rejeita mensagens nulas, vazias ou em branco.
 
-Exemplo invalido:
+Exemplo inválido:
 
 ```json
 {
@@ -276,9 +276,9 @@ Exemplo invalido:
 }
 ```
 
-Nesse caso, a aplicacao lanca `MessageIsEmptyException`.
+Nesse caso, a aplicação lança `MessageIsEmptyException`.
 
-Esse comportamento e intencional para praticar validacao no service em vez de deixar a regra espalhada pelo controller ou consumer.
+Esse comportamento é intencional para praticar validação no service em vez de deixar a regra espalhada pelo controller ou consumer.
 
 ---
 
@@ -290,15 +290,15 @@ Execute:
 ./mvnw test
 ```
 
-Observacao:
+Observação:
 
-O teste atual sobe o contexto Spring. Como existe um `@SqsListener`, o LocalStack precisa estar disponivel em `localhost:4566`.
+O teste atual sobe o contexto Spring. Como existe um `@SqsListener`, o LocalStack precisa estar disponível em `localhost:4566`.
 
-Uma melhoria futura e adicionar testes unitarios para `MessageService`, sem depender de Spring ou LocalStack.
+Uma melhoria futura é adicionar testes unitários para `MessageService`, sem depender de Spring ou LocalStack.
 
 ---
 
-## Estrutura Do Projeto
+## Estrutura do Projeto
 
 ```text
 src
@@ -333,26 +333,26 @@ src
 - `@SqsListener` precisa estar em uma classe gerenciada pelo Spring.
 - LocalStack permite praticar AWS localmente sem custo.
 - `SqsTemplate` simplifica o envio de mensagens.
-- Configuracoes de ambiente devem ficar fora do codigo.
+- Configurações de ambiente devem ficar fora do código.
 - Interfaces ajudam a reduzir acoplamento e melhoram testabilidade.
-- Services devem concentrar regras de negocio simples.
+- Services devem concentrar regras de negócio simples.
 
 ---
 
-## Proximos Passos De Estudo
+## Próximos Passos de Estudo
 
 - Criar uma Dead Letter Queue (DLQ)
 - Configurar retry e visibility timeout
-- Adicionar testes unitarios para `MessageService`
-- Adicionar testes de integracao com Testcontainers + LocalStack
+- Adicionar testes unitários para `MessageService`
+- Adicionar testes de integração com Testcontainers + LocalStack
 - Criar profiles `local` e `test`
-- Adicionar validacao com Bean Validation
+- Adicionar validação com Bean Validation
 - Documentar endpoint com OpenAPI/Swagger
 - Simular falhas no consumer e observar reprocessamento
 
 ---
 
-## Comandos Uteis
+## Comandos Úteis
 
 Listar filas:
 
@@ -381,6 +381,6 @@ aws --endpoint-url=http://localhost:4566 \
 
 ---
 
-## Licenca
+## Licença
 
-Projeto criado para fins de estudo e pratica.
+Projeto criado para fins de estudo e prática.
