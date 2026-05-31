@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: sqs
+  output:
+    ansi:
+      enabled: always
+
+app:
+  aws:
+    sqs:
+      queue-name: minhafila
+      endpoint: http://localhost:4566
+      region: sa-east-1
+      access-key: test
+      secret-key: test
